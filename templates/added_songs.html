@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" http-equiv="refresh" content="{{ curr_index }}" />
+</head>
+<body>
+    <h1>Songs Processed:</h1>
+    {% for song in songs_found %}
+        <p>{{ song }}</p>
+    {% endfor %}
+</body>
+</html>
