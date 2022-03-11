@@ -137,7 +137,7 @@ def adding_songs(curr_index):
         return render_template("done.html", songs_found = SONGS_FOUND, songs_not_found = SONGS_NOT_FOUND)
     
     else:
-        return render_template("added_songs.html", songs_found = SONGS_FOUND, songs_not_found = SONGS_NOT_FOUND, curr_index="0, URL=http://192.168.1.4:8080/adding-songs/{}".format(curr_index+1))
+        return render_template("added_songs.html", songs_found = SONGS_FOUND, songs_not_found = SONGS_NOT_FOUND, curr_index="0, URL=https://youtube-playlist-to-spotify.herokuapp.com/adding-songs/{}".format(curr_index+1))
 
 if __name__ == "__main__":
     app.run()
