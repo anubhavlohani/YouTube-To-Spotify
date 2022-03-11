@@ -8,7 +8,6 @@ from urllib.parse import urlencode
 
 from spotify_class import SpotifyAPI
 from preparing_names import create_queries
-from v3.app_local import PLAYLIST_ID
 from youtube_side import get_videos
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
