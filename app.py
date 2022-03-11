@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 
 from spotify_class import SpotifyAPI
 from preparing_names import create_queries
+from v1.app import YOUTUBE_VIDEOS
 from youtube_side import get_videos
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -31,7 +32,7 @@ SCOPE = "playlist-modify-public playlist-modify-private"
 USERNAME = None
 SPOTIFY = None
 PLAYLIST_ID = None
-YOUTUBE_VIDEOS = []
+# YOUTUBE_VIDEOS = []
 
 SONGS_FOUND = []
 SONGS_NOT_FOUND = []
@@ -99,8 +100,12 @@ def youtube_playlist():
     if request.method == "POST":
         link = request.form["playlist_link"]
         link = link.split("=")[-1]
-        global YOUTUBE_VIDEOS
         YOUTUBE_VIDEOS = get_videos(link)
+
+        f = open("videos.txt", "r", encoding="utf8")
+        for v in YOUTUBE_VIDEOS:
+            f.write(v + "\n")
+        f.close()
 
         return redirect(url_for("adding_songs", curr_index=0))
 
@@ -114,6 +119,10 @@ def adding_songs(curr_index):
     refresh_token = os.environ.get("REFRESH_TOKEN")
     access_token_expires = datetime.strptime(os.environ.get("ACCESS_TOKEN_EXPIRES"), "%Y-%m-%d %H:%M:%S")
     SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token, access_token_expires=access_token_expires)
+
+    f = open("videos.txt", "r", encoding="utf8")
+    YOUTUBE_VIDEOS = f.readlines()
+    f.close()
 
     search_queries = create_queries(YOUTUBE_VIDEOS[curr_index])
     track_id = None
