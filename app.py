@@ -8,6 +8,7 @@ from urllib.parse import urlencode
 
 from spotify_class import SpotifyAPI
 from preparing_names import create_queries
+from v3.app_local import PLAYLIST_ID
 from youtube_side import get_videos
 current_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -28,18 +29,13 @@ SPOTIFY_API_URL = "{}/{}".format(SPOTIFY_API_BASE_URL, API_VERSION)
 REDIRECT_URI = "https://youtube-playlist-to-spotify.herokuapp.com/callback"
 SCOPE = "playlist-modify-public playlist-modify-private"
 
-USERNAME = None
-SPOTIFY = None
-PLAYLIST_ID = None
-
 SONGS_FOUND = []
 SONGS_NOT_FOUND = []
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.method == "POST":
-        global USERNAME
-        USERNAME = request.form["username"]
+        os.environ["USERNAME"] = str(request.form["username"])
         query_params = urlencode({
             "client_id": CLIENT_ID,
             "response_type": "code",
@@ -83,12 +79,12 @@ def create_playlist():
         refresh_token = os.environ.get("REFRESH_TOKEN")
         access_token_expires = datetime.strptime(os.environ.get("ACCESS_TOKEN_EXPIRES"), "%Y-%m-%d %H:%M:%S")
         SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token, access_token_expires=access_token_expires)
-
+        
+        USERNAME = os.environ.get("USERNAME")
         r = SPOTIFY.create_playlist(USERNAME, playlist_name, playlist_description)
 
         if r.status_code in range(200, 299):
-            global PLAYLIST_ID
-            PLAYLIST_ID = r.json()["id"]
+            os.environ["SPOTIFY_PLAYLIST_ID"] = r.json()["id"]
             return redirect(url_for("youtube_playlist"))
 
     return render_template("create_playlist.html")
@@ -133,6 +129,8 @@ def adding_songs(curr_index):
         code_payload = json.dumps({
             "uris": ["spotify:track:" + track_id]
         })
+
+        PLAYLIST_ID = os.environ.get("SPOTIFY_PLAYLIST_ID")
         r = requests.post("https://api.spotify.com/v1/playlists/{}/tracks".format(PLAYLIST_ID), data=code_payload, headers=headers)
 
     if curr_index == len(YOUTUBE_VIDEOS)-1:
