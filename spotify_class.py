@@ -22,7 +22,7 @@ class SpotifyAPI():
     client_id = ""
     client_secret = ""
 
-    def __init__(self, client_id, client_secret, data=None, access_token=None, refresh_token=None, access_token_expires=None):
+    def __init__(self, client_id, client_secret, data=None, access_token=None, refresh_token=None):
         '''
         data is the json data returned by the request that contains access_token,
         expires_in & refresh_token
@@ -37,7 +37,7 @@ class SpotifyAPI():
         else:
             self.access_token = access_token
             self.refresh_token = refresh_token
-            self.access_token_expires = access_token_expires
+            self.access_token_expires = self.access_token_expires + datetime.timedelta(seconds=3600)
 
         
     def get_client_credentials(self):

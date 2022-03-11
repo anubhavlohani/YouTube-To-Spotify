@@ -64,7 +64,6 @@ def callback():
 
     os.environ["ACCESS_TOKEN"] = str(SPOTIFY.access_token)
     os.environ["REFRESH_TOKEN"] = str(SPOTIFY.refresh_token)
-    os.environ["ACCESS_TOKEN_EXPIRES"] = SPOTIFY.access_token_expires.strftime("%Y-%m-%d %H:%M:%S")
 
     return redirect(url_for("create_playlist"))
 
@@ -76,8 +75,7 @@ def create_playlist():
 
         access_token = os.environ.get("ACCESS_TOKEN")
         refresh_token = os.environ.get("REFRESH_TOKEN")
-        access_token_expires = datetime.strptime(os.environ.get("ACCESS_TOKEN_EXPIRES"), "%Y-%m-%d %H:%M:%S")
-        SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token, access_token_expires=access_token_expires)
+        SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token)
         
         USERNAME = os.environ.get("USERNAME")
         r = SPOTIFY.create_playlist(USERNAME, playlist_name, playlist_description)
@@ -105,8 +103,7 @@ def adding_songs(curr_index):
 
     access_token = os.environ.get("ACCESS_TOKEN")
     refresh_token = os.environ.get("REFRESH_TOKEN")
-    access_token_expires = datetime.strptime(os.environ.get("ACCESS_TOKEN_EXPIRES"), "%Y-%m-%d %H:%M:%S")
-    SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token, access_token_expires=access_token_expires)
+    SPOTIFY = SpotifyAPI(CLIENT_ID, CLIENT_SECRET, access_token=access_token, refresh_token=refresh_token)
 
     YOUTUBE_VIDEOS = get_videos(os.environ.get("YT_PLAYLIST_LINK"))
 
