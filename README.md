@@ -1,5 +1,3 @@
 # YouTube-To-Spotify
 
-Poorly made YouTube to Spotify Playlist converter
-
-Works great locally but not so much on Heroku
+Simple web app that runs locally and lets you convert any public YouTube playlist and add the songs it contains to a Spotify playlist to your account.
